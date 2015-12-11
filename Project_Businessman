@@ -75,7 +75,7 @@ print total_data.columns
 train = total_data.ix[pd.notnull(total_data.Revenue)]
 test = total_data.ix[pd.isnull(total_data.Revenue)]
 plt.rcParams['figure.figsize'] = (8, 6)
-train[["LogDaysToOpen", "Revenue"]].plot(x="LogDaysToOpen", y="Revenue", kind='scatter', title="Log of Days Opened vs Revenue")
+train[["LogDaysToOpen", "Revenue"]].plot(kind='scatter', x="LogDaysToOpen", y="Revenue", title="Log of Days Opened vs Revenue")
 
 # Deal with City, replace the city value with frequency count occured in train and test set
 counts = (test["City"].value_counts() / Fake_Ratio).add(train["City"].value_counts(), fill_value=0)
@@ -86,7 +86,7 @@ total_data["LogOfResCountInCity"] = np.log(total_data["City"])
 total_data = total_data.drop(["City"], axis=1)
 # plot the restaurant count in city with scatter distribution 
 plt.rcParams['figure.figsize'] = (8, 6) # Resize plots
-total_data[["LogOfResCountInCity", "Revenue"]].plot(x="LogOfResCountInCity", y="Revenue", kind='scatter', title="Log of Restaurant Count In City vs Revenue",color="red")
+total_data[["LogOfResCountInCity", "Revenue"]].plot(kind='scatter', x="LogOfResCountInCity", y="Revenue", title="Log of Restaurant Count In City vs Revenue",color="red")
 
 #Deal with the missing value
 revenue= total_data.Revenue
@@ -98,8 +98,8 @@ total_data = total_data.join(revenue)
 plt.rcParams['figure.figsize'] = (20, 8)# Resize plots
 fig, axs = plt.subplots(1,2)
 print "Distribution of missing values in train set and test set:"
-total_data['Missing'].ix[pd.notnull(total_data.Revenue)].value_counts().plot(title="Train Set", kind='bar', ax=axs[0],color="green")
-total_data['Missing'].ix[pd.isnull(total_data.Revenue)].value_counts().plot(title="Test Set", kind='bar', ax=axs[1], color='red')
+total_data['Missing'].ix[pd.notnull(total_data.Revenue)].value_counts().plot( kind='bar',title="Train Set", ax=axs[0],color="green")
+total_data['Missing'].ix[pd.isnull(total_data.Revenue)].value_counts().plot(kind='bar',title="Test Set", ax=axs[1], color='red')
 plt.show()
 # for missing values, transform to mean value of that column
 for miss_col in missing_columns:
@@ -108,14 +108,14 @@ for miss_col in missing_columns:
 #Here convert two categorical variables "Citygroup" and "Type" to dummy variables
 plt.rcParams['figure.figsize'] = (16, 8)# Resize plots
 fig, axs = plt.subplots(1,2)
-total_data['Citygroup'].ix[pd.notnull(total_data.Revenue)].value_counts().plot(title="City Group Distribution in the Train Set", kind='bar', ax=axs[0],color="green") 
-total_data['Citygroup'].ix[pd.isnull(total_data.Revenue)].value_counts().plot(title="City Group Distribution in the Test Set", kind='bar', ax=axs[1],color="red")
+total_data['Citygroup'].ix[pd.notnull(total_data.Revenue)].value_counts().plot(kind='bar',title="City Group Distribution in the Train Set",  ax=axs[0],color="green") 
+total_data['Citygroup'].ix[pd.isnull(total_data.Revenue)].value_counts().plot(kind='bar',title="City Group Distribution in the Test Set", ax=axs[1],color="red")
 plt.show()
 
 plt.rcParams['figure.figsize'] = (16, 8)
 fig, axs = plt.subplots(1,2)
 total_data['Type'].ix[pd.notnull(total_data.Revenue)].value_counts().plot(title="Restaurant Type Distribution in the Train Set", kind='bar', ax=axs[0],color="blue")
-(total_data['Type'].ix[pd.isnull(total_data.Revenue)].value_counts()/Fake_Ratio).plot(title="Approximate Restaurant Type Distribution in the Test Set", kind='bar', ax=axs[1],color="black")   
+(total_data['Type'].ix[pd.isnull(total_data.Revenue)].value_counts()/Fake_Ratio).plot(kind='bar',title="Approximate Restaurant Type Distribution in the Test Set",  ax=axs[1],color="black")   
 plt.show()
 #According to distribution, type "MB" not in train set, but in test set. so convert the type MB to DT in test set
 total_data.loc[total_data.Type == 'MB', ['Type']] = 'DT'
