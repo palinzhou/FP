@@ -1,0 +1,31 @@
+library(randomForest)
+library(lubridate)
+
+train = read.csv("Input/train.csv", header = TRUE, stringsAsFactors = FALSE)
+test = read.csv("Input/test.csv", header = TRUE, stringsAsFactors = FALSE)
+
+train$ddd <-  mdy(train$Open.Date)
+train$days=as.numeric(as.Date("2015-11-30")-as.Date(train$ddd))
+train$ddd <- NULL
+test$ddd <-  mdy(test$Open.Date)
+test$days=as.numeric(as.Date("2015-11-30")-as.Date(test$ddd))
+test$ddd <- NULL
+
+train$Open.Date <- NULL
+test$Open.Date <- NULL
+train$City <- NULL
+test$City <- NULL
+
+train$Type <- as.factor(train$Type)
+train$City.Group <- as.factor(train$City.Group)
+test$Type <- as.factor(test$Type)
+test$City.Group <- as.factor(test$City.Group)
+
+train <- train[train$revenue < 10000000,]
+
+rf = randomForest(revenue ~.  , data = train[,-1], ntree=1000, importance=TRUE)
+Results = predict(rf, test[,-1])
+
+id<-test[,1]
+sub<-cbind(id,Results)
+write.csv(sub, "Output/TFI_rf_R.csv", row.names = FALSE, quote = FALSE)
